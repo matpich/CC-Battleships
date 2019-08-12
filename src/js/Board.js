@@ -1,4 +1,8 @@
 export default class Board {
+    constructor() {
+        this.body = this.create();
+    }
+
     create() {
         const boardArray = [];
         for (let i = 0; i < 10; i++) {
