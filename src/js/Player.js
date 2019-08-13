@@ -1,28 +1,25 @@
+import Ship from './Ship';
+import Board from './Board';
 
-class Player {
-    constructor() {
-    this.myArmy= new Board()
-    this.myFights= new Board()
-    }
-    generateBoards(){
-        const boards = [
-            [this.myArmy, '#battlefield', 'field']
-            [this.myFights, '#battlefield-prev', 'field-prev']
-        ];
-        boards.forEach(e => {
-            for (let i = 0 ; i < 10 ; i++) {
-                for (let j = 0; j < 10 ; j++) {
-                    const field = document.createElement('div');
-                    field.innerHTML = e[0][i][j];
-                    field.className = e[2];
-                    document.querySelector(e[1]).appendChild(field);
-                }
-            }
-        });
-    }
+export default class Player {
+  constructor(name, playerNo) {
+    this.playerNo = playerNo;
+    this.name = name;
+    this.ships = this.generateFleet(name);
+
+    this.ownFleetBoard = new Board();
+    this.enemyFleetBoard = new Board();
+  }
+
+  //generuje flotę
+  generateFleet(name) {
+    const fleetSizes = [5, 4, 3, 3, 2, 2, 1, 1];
+    return fleetSizes.map((e, id) => {
+      return new Ship(e, name, id);
+    });
+  }
+
+  //sprawdza czy wszystkie statki są rozmieszczone
+  //do zrobienia
+  allShipsPositioned() {}
 }
-
-const player1 = new Player();
-const player2 = new Player();
-
-player1.generateBoards()

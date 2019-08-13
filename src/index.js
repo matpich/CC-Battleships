@@ -1,47 +1,64 @@
-class Board {
-    constructor() {
-        this.body = this.create();
-    }
+import './css/style.css';
 
-    create() {
-        const boardArray = [];
-        for (let i = 0; i < 10; i++) {
-            boardArray.push([]);
-            for (let j = 0; j < 10; j++) {
-                boardArray[i].push("");
-            }
-        }
-        return boardArray;
-    }
-}
+import Player from './js/Player';
+import GameGUI from './js/GameGUI';
 
-class Player {
-    constructor() {
-    this.myArmy= new Board()
-    this.myFights= new Board()
-    }
-    generateBoards(){
-        const boards = [
-            [this.myArmy, '#battlefield', 'field']
-            [this.myFights, '#battlefield-prev', 'field-prev']
-        ];
-        boards.forEach(e => {
-            for (let i = 0 ; i < 10 ; i++) {
-                for (let j = 0; j < 10 ; j++) {
-                    const field = document.createElement('div');
-                    field.innerHTML = e[0][i][j];
-                    field.className = e[2];
-                    document.querySelector(e[1]).appendChild(field);
-                }
-            }
-        });
-    }
-}
+const playerOne = new Player('PlayerOne', 1);
+const playerTwo = new Player('PlayerTwo', 2);
+const game = new GameGUI();
 
-const player1 = new Player();
-const player2 = new Player();
+//funkcja pozwalająca na rozmieszczanie statków
+const placeShips = player => {
+  let shipNo = 0;
 
-player1.generateBoards()
-//for testing purpose - to remove!!!
-const tab = new Board();
-console.log(tab);
+  //wybiera odpowiednią planszę w zależności od gracza
+  let battlefield;
+  if (player.playerNo === 1) {
+    battlefield = document.querySelector('#first-battlefield');
+  } else if (player.playerNo === 2) {
+    battlefield = document.querySelector('#second-battlefield');
+  }
+
+  //funkcja przekazywana do eventListenera
+  const position = e => {
+    if (shipNo != 8 && e.toElement.className === 'field') {
+      const cords = {
+        x: e.toElement.id[0],
+        y: e.toElement.id[2]
+      };
+      player.ships[shipNo].setShipPosition(cords, player.ownFleetBoard);
+    }
+  };
+
+  //wydarzenie odpalające się przy nacisnięciu klawisza myszy
+  battlefield.addEventListener('mousedown', position);
+
+  //wydarzenie odpalające się przy puszczeniu klawisza myszy
+  battlefield.addEventListener('mouseup', () => {
+    game.refresh(playerOne, playerTwo);
+    if (shipNo == 8) {
+      battlefield.removeEventListener('mousedown', position);
+    } else {
+      const anyNotPositioned = player.ships[shipNo].anyNotPositioned();
+      if (anyNotPositioned) {
+        return;
+      } else {
+        shipNo++;
+      }
+    }
+  });
+};
+//#######################
+
+placeShips(playerOne);
+placeShips(playerTwo);
+
+//pomocniczo dodałem sobie eventlistener - pokazuje mi statki graczy i ich pozycje jak nacisnę jakikolwiek przycisk
+document.body.addEventListener('keypress', e => {
+  console.log(playerOne.ships);
+  console.log(playerTwo.ships);
+});
+
+console.log(playerOne.ownFleetBoard.body);
+
+window.onload = game.refresh(playerOne, playerTwo);
