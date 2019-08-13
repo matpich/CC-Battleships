@@ -42,4 +42,4 @@ class Submarine extends Ship {
 	}	
 }
 
-export { Ship,Battleship,Destroyer };
+export { Ship, Battleship, Destroyer, Submarine };
