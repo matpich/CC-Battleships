@@ -65,3 +65,23 @@ body {
 .field:hover {
   background-color: rgba(0, 0, 0, 0.3)
 }
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 30%;
+  height: 20%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  align-items: center;
+  background: #fdfdfdf5;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.hidden {
+  display: none;
+}

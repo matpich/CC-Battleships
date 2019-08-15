@@ -2,10 +2,12 @@ import './css/style.css';
 
 import Player from './js/Player';
 import GameGUI from './js/GameGUI';
+import GameFlow from './js/GameFlow';
 
 const playerOne = new Player('PlayerOne', 1);
 const playerTwo = new Player('PlayerTwo', 2);
 const game = new GameGUI();
+const gameFlow = new GameFlow();
 
 //funkcja pozwalająca na rozmieszczanie statków
 const placeShips = player => {
@@ -30,14 +32,14 @@ const placeShips = player => {
     }
   };
 
-  //wydarzenie odpalające się przy nacisnięciu klawisza myszy
-  battlefield.addEventListener('mousedown', position);
-
-  //wydarzenie odpalające się przy puszczeniu klawisza myszy
-  battlefield.addEventListener('mouseup', () => {
+  const shipsPositions = () => {
     game.refresh(playerOne, playerTwo);
     if (shipNo == 8) {
       battlefield.removeEventListener('mousedown', position);
+      // test
+      // gameFlow.arePlayerShipsPlaced(playerOne);
+      // console.log(gameFlow.arePlayerShipsPlaced(playerOne));
+      // gameFlow.arePlayerShipsPlaced(playerTwo);
     } else {
       const anyNotPositioned = player.ships[shipNo].anyNotPositioned();
       if (anyNotPositioned) {
@@ -46,7 +48,14 @@ const placeShips = player => {
         shipNo++;
       }
     }
-  });
+  }
+
+  //wydarzenie odpalające się przy nacisnięciu klawisza myszy
+  battlefield.addEventListener('mousedown', position);
+
+  //wydarzenie odpalające się przy puszczeniu klawisza myszy
+  battlefield.addEventListener('mouseup', shipsPositions);
+  
 };
 //#######################
 
@@ -62,3 +71,30 @@ document.body.addEventListener('keypress', e => {
 console.log(playerOne.ownFleetBoard.body);
 
 window.onload = game.refresh(playerOne, playerTwo);
+
+// gameFlow.gameMessage('Gościu!!');
+
+// Usuwanie eventListenera w momencie rozmieszczenia statków
+document.querySelector('#first-battlefield').addEventListener('click', () => {
+  if (gameFlow.arePlayerShipsPlaced(playerOne)) {
+    if(document.querySelector('#first-battlefield').getAttribute('listener') === 'true'){
+      getEventListeners(document.querySelector('#first-battlefield')).click.forEach((e) => {
+        e.remove()
+      })
+    }
+    gameFlow.gameMessage(`Statki gracza ${playerOne.name} zostały rozmieszczone`);
+  }
+})
+
+// Usuwanie eventListenera w momencie rozmieszczenia statków
+document.querySelector('#second-battlefield').addEventListener('click', () => {
+  if (gameFlow.arePlayerShipsPlaced(playerTwo)) {
+    if (document.querySelector('#second-battlefield').getAttribute('listener') === 'true') {
+      getEventListeners(document.querySelector('#second-battlefield')).click.forEach((e) => {
+        e.remove()
+      })
+    }
+    gameFlow.gameMessage(`Statki gracza ${playerTwo.name} zostały rozmieszczone`);
+  }
+})
+

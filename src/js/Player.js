@@ -21,5 +21,7 @@ export default class Player {
 
   //sprawdza czy wszystkie statki są rozmieszczone
   //do zrobienia
-  allShipsPositioned() {}
+  allShipsPositioned() {
+    return false;
+  }
 }
