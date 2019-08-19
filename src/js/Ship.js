@@ -39,16 +39,33 @@ export default class Ship {
     });
   }
 
+
+
   //jeśli komórka w tablicy wolna
   //znajduje pustą komórkę statku
   //przypisuje koordynaty
   //na przekazanej tablicy wywołuje metodę, która robi update jej zawartości
   setShipPosition(cords, board) {
-    if (board.isEmpty(cords)) {
+    let isValid = 0;
+    for (let i = Number(cords.x) -1; i <= Number(cords.x) +1; i++) {
+      for (let j = Number(cords.y) -1; j <= Number(cords.y) +1; j++) {
+        let cordsAround = {x: String(i), y: String(j)};
+        if (board.isEmpty(cordsAround)) {
+          isValid++;
+          console.log(isValid);
+          console.log(board.body[2][2])
+        } else if (board.body[Number(cordsAround.x)][Number(cordsAround.y)].includes(String(this.deck.length))) {
+          isValid--;
+          console.log(isValid);
+        }
+      }
+    }
+    if (board.isEmpty(cords) && isValid==9) {
       const deck = this.firstNotPositioned();
       deck.xCord = cords.x;
       deck.yCord = cords.y;
       board.updateBoard(cords, deck.cell);
     }
+    
   }
 }

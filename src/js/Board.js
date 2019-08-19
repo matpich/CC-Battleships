@@ -15,6 +15,10 @@ export default class Board {
     this.body[cords.x][cords.y] = cell;
   }
 
+  getCell(cords) {
+    return this.body[cords.x][cords.y];
+  }
+
   isEmpty(cords) {
     return !this.body[cords.x][cords.y] ? true : false;
   }
